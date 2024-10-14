@@ -16,6 +16,18 @@ const app = express()
 //app.post -> it handles only POST requests
 //app.delete -> it handles only DELETE requests
 
+// GET /users => it checks all the app.xxx("matching server ") functions 
+// get /users => middleware chain => request handler -> ( )
+
+app.use(
+    "/",
+    (req,res,next) =>{
+        console.log("handling root route ");
+        res.send("this is 1st response | handling root route")
+        next();
+    }
+)
+
 app.use("/login",
     (req,res,next) => {
     console.log("handling login route, 1st Response!!!!!!!!!!!!")
@@ -67,9 +79,18 @@ app.listen(3000, ()=>{
     console.log('Server is running on port 3000')
 })
 
-app.use("/",(req,res)=>{
-    res.send("welcome to my first server , port used: 3000")
-})
+// app.use("/",(req,res)=>{
+//     res.send("welcome to my first server , port used: 3000")
+// })
+
+app.use(
+    "/",
+    (req,res,next) =>{
+        console.log("handling root route ");
+        res.send("this is 1st response | handling root route")
+        // next();
+    }
+)
 
 
 
