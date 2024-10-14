@@ -128,8 +128,25 @@ app.get("/user/data", userAuth,(req,res,next) =>{ // to check in this route
     res.send("User data fetched successfully")
 })
 
-app.get
+app.get("/getUserData", (req,res)=>{
 
+   try{
+    //logic of fetching user data from database
+    throw new Error("rnadomdsljfl;dsfj;ladfj;sdfj")
+    res.send("user data sent successfully!!!!!!!!!")
+   }
+   catch(err){
+    res.status(500).send("something went wrong while fetching data")
+   }
+})
+
+app.use("/", (err,req,res,next)=>{
+    //error handling for all routes where error is unhandled by them internally
+    if(err){
+        res.status(500).send("something went Wrong")
+    }
+
+})
 
 app.listen(3000, ()=>{
     console.log('Server is running on port 3000')
