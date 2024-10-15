@@ -5,20 +5,27 @@ const User = require('./models/user');  // Import the model correctly
 const app = express();
 
 // Middleware to parse JSON data
-app.use(express.json());
+app.use(express.json()); // it will convert the json to javascript object -> this middleware will work for all the routes
 
 app.post("/signup", async (req, res) => {
     console.log("signup route called");
 
-    const userObj = {
-        "firstName": "daemon",
-        "lastName": "targaryen",
-        "email": "daemon@gmail.com",
-        "password": "12345678",
-        "age": 35,
-        "gender": "Male",
+    // const userObj = {
+    //     "firstName": "Raeyan",
+    //     "lastName": "Riley",
+    //     "email": "raegann@gmail.com",
+    //     "password": "12345678",
+    //     "age": 35,
+    //     "gender": "female",
       
-    }
+    // }
+
+    console.log(req)
+    console.log(req.body)
+
+    const userObj = req.body
+
+
 
     const user = new User(userObj);
 
@@ -29,7 +36,7 @@ app.post("/signup", async (req, res) => {
    catch(err){
     res.status(400).send("error saving the user" + err.message)
    }
-   
+
 });
 
 
