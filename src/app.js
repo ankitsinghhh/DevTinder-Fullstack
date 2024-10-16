@@ -118,20 +118,20 @@ app.get("/random", (req,res)=>{
 app.patch("/patch", async (req,res) => {
     console.log("patch /user called");
     const userId = req.body.userId;
-    // const updatedInfo = req.body.data;
-    const updatedInfo = {
-        "firstName": "Raeyan Updated",
-        "lastName": "Riley Updated",
-        "email": "ramayan@gmail.com",
-        "password": "12345678",
-        "age": 35,
-        "gender": "female",
-    }
+    const updatedInfo = req.body.data;
+    // const updatedInfo = {
+    //     "firstName": "Raeyan ",
+    //     "lastName": "Riley",
+    //     "email": "ramaya@gmail.com",
+    //     "password": "12345678",
+    //     "age": 35,
+    //     "gender": "female",
+    // }
     console.log(updatedInfo);
 
     try {
         // Add { new: true } to return the updated document
-        const user = await User.findByIdAndUpdate(userId, updatedInfo, { new: true });
+        const user = await User.findByIdAndUpdate(userId, updatedInfo, { new: true, runValidators: true });
         console.log("i am here in try");
 
         if (!user) {
