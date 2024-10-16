@@ -4,8 +4,26 @@ const User = require('./models/user');  // Import the model correctly
 
 const app = express();
 
+
+
 // Middleware to parse JSON data
 app.use(express.json()); // it will convert the json to javascript object -> this middleware will work for all the routes
+
+
+connectDB()
+    .then(() => {
+        console.log("Database connection established");
+        app.listen(3000, () => {
+            console.log("Server is successfully listening on port 3000");
+        });
+    })
+    .catch((err) => {
+        console.error("Database connection failed:", err);
+    });
+
+app.get("/", (req, res) => {
+    res.send("Handling root route");
+});
 
 app.post("/signup", async (req, res) => {
     console.log("signup route called");
@@ -39,22 +57,102 @@ app.post("/signup", async (req, res) => {
 
 });
 
+// GET user by email
+app.get("/user", async (req,res) =>{
+    const userEmail = req.body.email
+    // const age = req.body.age
+    try{
+        const user = await User.find({email: userEmail}) // to fetch users using email ID
+        // const user = await User.find({age: age}) // to fetch users of same age 
+        // const user = await User.find({}) // to fetch all the users
+        console.log(user)
+
+        if(user.length === 0 ){
+            res.status(404).send("No user found with that email")
+   
+        }else{
+            res.send(user)
+        }
 
 
-connectDB()
-    .then(() => {
-        console.log("Database connection established");
-        app.listen(3000, () => {
-            console.log("Server is successfully listening on port 3000");
-        });
-    })
-    .catch((err) => {
-        console.error("Database connection failed:", err);
-    });
+    }
+    catch(err){
+        res.status(400).send("error fetching the user" + err.message)
+    }
+})
+// FEED API -> GET /getAllUsers - > get all users from database
+app.get("/getAllUsers", async (req,res) => {
+    console.log("getAllUsers route called");
+    try{
+        const users = await User.find({}) // to fetch all the users
+        res.send(users)
+    }
+    catch(err){
+        res.status(400).send("error fetching the users" + err.message)
+    }
+})
 
-app.get("/", (req, res) => {
-    res.send("Handling root route");
+//Delete data of the user
+app.delete("/user", async (req,res) => {
+    const userId = req.body.userId
+
+    try {
+        const user = await User.findByIdAndDelete(userId);
+
+        if(!user){
+            res.status(404).send(`user does not exist with this given id - ${userId}`)
+        }else{
+            res.send(user)
+        }
+      
+    } catch (error) {
+        res.status(400).send("something went wrong"+ error.message)
+    }
+})
+
+app.get("/random", (req,res)=>{
+    const randomNum = Math.floor(Math.random() * 100) + 1;
+    res.send(`Random number is: ${randomNum}`);
+})
+
+app.patch("/patch", async (req,res) => {
+    console.log("patch /user called");
+    const userId = req.body.userId;
+    // const updatedInfo = req.body.data;
+    const updatedInfo = {
+        "firstName": "Raeyan Updated",
+        "lastName": "Riley Updated",
+        "email": "ramayan@gmail.com",
+        "password": "12345678",
+        "age": 35,
+        "gender": "female",
+    }
+    console.log(updatedInfo);
+
+    try {
+        // Add { new: true } to return the updated document
+        const user = await User.findByIdAndUpdate(userId, updatedInfo, { new: true });
+        console.log("i am here in try");
+
+        if (!user) {
+            res.status(404).send(`user does not exist with this given id - ${userId}`);
+        } else {
+            console.log("i am here in TRY - else");
+            res.status(201).json({
+                status:"sucess",
+                data: user
+            })
+        }
+    } catch (err) {
+        res.status(400).send("error updating the user: " + err.message);
+    }
 });
+
+
+
+
+
+
 
 
 
@@ -75,7 +173,7 @@ app.get("/", (req, res) => {
 // + -- you can write as many of previous letter
 // /a/ --this regex means that if that routee contains letter 'a' it will work 
 
-//handling get request
+// handling get request
 // app.get('/user/:userId/:name/:pwd',(req,res) =>{
 //     console.log(req.query)
 //     console.log(req.params)
@@ -93,8 +191,8 @@ app.get("/", (req, res) => {
 
 // app.use -> it handles any type of request method that is -> post or get or delete or put or patch
 // app.get -> it handles only GET requests
-//app.post -> it handles only POST requests
-//app.delete -> it handles only DELETE requests
+// app.post -> it handles only POST requests
+// app.delete -> it handles only DELETE requests
 
 // GET /users => it checks all the app.xxx("matching server ") functions 
 // get /users => middleware chain => request handler -> ( )
