@@ -43,6 +43,10 @@ app.post("/signup", async (req, res) => {
 
     const userObj = req.body
 
+    if(userObj.skills.length>15){
+        res.status(400).send("Skills length limit ( 15 ) reached")
+    }
+
 
 
     const user = new User(userObj);
@@ -52,7 +56,7 @@ app.post("/signup", async (req, res) => {
     res.send("user added successfully")
    }
    catch(err){
-    res.status(400).send("error saving the user" + err.message)
+    res.status(400).send("error saving the user : " + err.message)
    }
 
 });
@@ -119,6 +123,10 @@ app.patch("/patch", async (req,res) => {
     console.log("patch /user called");
     const userId = req.body.userId;
     const updatedInfo = req.body.data;
+
+
+
+
     // const updatedInfo = {
     //     "firstName": "Raeyan ",
     //     "lastName": "Riley",
@@ -130,6 +138,20 @@ app.patch("/patch", async (req,res) => {
     console.log(updatedInfo);
 
     try {
+
+        const ALLOWED_UPDATES = ["photoUrl", "gender", "age", "skills"];
+        const isUpdateAllowed = Object.keys(updatedInfo).every((k) => ALLOWED_UPDATES.includes(k));
+
+        if (!isUpdateAllowed) {
+            res.status(400).send("Update not allowed");
+            console.log("update not allowed bruh");
+
+        }
+
+        if(updatedInfo.skills.length > 15){
+            res.status(400).send("Skills length limit (15) reached")
+        }
+
         // Add { new: true } to return the updated document
         const user = await User.findByIdAndUpdate(userId, updatedInfo, { new: true, runValidators: true });
         console.log("i am here in try");
