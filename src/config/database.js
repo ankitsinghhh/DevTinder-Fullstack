@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const mongoURI = "mongodb+srv://ankitsingh79834:zDiFnAld679jUSGx@cluster0.e58nx.mongodb.net/devTinder"; // your actual connection string
+const mongoURI = "mongodb+srv://ankitsingh79834:iqZvKmb1kaN5rGic@cluster0.e58nx.mongodb.net/devTinder"; // your actual connection string
 
 const connectDB = async () => {
     if (mongoose.connection.readyState === 1) {

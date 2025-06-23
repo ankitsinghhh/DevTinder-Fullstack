@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema(
         password: { 
             type: String,
             required: true ,
-            trim:true,
+            trim:true, 
             validate(value){
                 if(!validator.isStrongPassword(value)){
                     throw new Error("Enter Strong password "+ value + `
@@ -47,8 +47,8 @@ const userSchema = new mongoose.Schema(
             type: String,
             validate(value){ //by default validate method is only called when new object is created ( wont run while patching by default)
                 if(!["male","female","others"].includes(value)){
-                    throw new Error("Gender Data is not valid")
-                }
+                    throw new Error("Gender Data is not valid | it should be one of these values: male, female, others")
+                }   
             }
         },
         photoUrl:{
