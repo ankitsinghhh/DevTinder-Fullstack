@@ -1,18 +1,45 @@
-
 // Importing the Express framework
 const express = require('express');
+const bcrypt = require('bcrypt')
 const {adminAuth,userAuth} = require('./middlewares/auth.js')
 const {connectDB} = require('./config/database');
 const User = require('./models/user.js');
+const {validateSignupData, validateLoginData} = require('./utils/validation.js')
 
 // Creating an instance/object of an Express application
 const app = express();
 //middlware to parse the json data coming from the request body to the javascript object
 app.use(express.json())
 
+//API to login
+app.post("/login",async ( req,res)=>{
+  try{
+      //extracting the email and password from the request body
+      const { email, password} = req.body
+      //Validating if Email entered is valid or not 
+      validateLoginData(req)
+      //check if user is present in db or not 
+      const user = await User.findOne({email:email})
+      //now interpreting the response , if user not present , then throw error
+      if(!user){
+        throw new Error("Invalid Credentails")
+      }
+      //checking if the password is valid or not using bcrypt.compare
+      const isPasswordValid = await bcrypt.compare(password,user.password)
+      if(isPasswordValid){
+        res.send("Login Successfull")
+      }else{
+        throw new Error("Password is not correct")
+      }
 
 
-//API to get singel user by email 
+  }
+  catch(err){
+    res.status(400).send("ERROR : " + err.message)
+  }
+})
+
+//API to get single user by email 
 app.get("/user",async (req,res)=>{
     const userEmail = req.body.email
     console.log(userEmail)
@@ -53,18 +80,35 @@ app.get("/getAllUsers", async (req,res)=>{
 //SignUp API 
 app.post("/signup",async (req,res)=>{
 
-  //first task is to pass dynamic data to the API using postman
-  const userObj = req.body
-  // creating a new instance of the model User and passing the userObj as an argument
-  const user = new User(userObj)
-
   try{
+     // while someone signs up , first validation of data should be there 
+    validateSignupData(req)
+
+  //Then Encrypting the Password
+  // ! install bcrypt using npm i bcrypt
+
+  const {firstName, lastName, email,password} = req.body
+  const passwordHash = await bcrypt.hash(password,10)
+  console.log(passwordHash + " -> this is the hashed password ")
+
+  //first task is to pass dynamic data to the API using postman
+  // this is not a good way to create userObj
+    // const userObj = req.body
+    // const user = new User(userObj)
+    //instead do this -> you should mention all the fields explicitly
+    const user = new User({
+      firstName, 
+      lastName,
+      email,
+      password:passwordHash,
+    })
+
     await user.save()
 
     res.send("user created successfully")
   }
   catch(err){
-    res.status(400).send("user creation failed"+err.message)
+    res.status(400).send("ERROR : "+err.message)
   }
 
 
