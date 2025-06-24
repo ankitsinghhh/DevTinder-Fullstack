@@ -1,3 +1,6 @@
+const jwt = require('jsonwebtoken')
+const User = require('../models/user')
+
 const adminAuth =  (req,res,next)=>{
     console.log("Admin Auth is getting checked")
     //Logic of checking if request is authorised
@@ -14,20 +17,32 @@ const adminAuth =  (req,res,next)=>{
 
 }
 
-const userAuth =  (req,res,next)=>{
-    console.log("user Auth is gettting checked")
+const userAuth = async (req,res,next)=>{
 
-    //Logic of checking if request is authorised
-   const token = "abc"
-   const isUserAuthorized = token === "abc"
+    try{
+        //read the token 
+        const {token} = req.cookies
+        //checking if token is present or not 
+        if(!token){
+            throw new Error("Token is not present")
+        }
+        //validate the token
+        const decodedObj = await jwt.verify(token,"Dev@Tinder&798")
+        //get id from decodedObj
+        const _id = decodedObj._id
+        //find the user
+        const user = await User.findById(_id)
+        if(!user){
+            throw new Error("User not found")
+        }
 
-   if(!isUserAuthorized){
-       res.status(401).send("Unauthorized User Access")
-   }
-   else{
-       console.log("User Authorized")
-       next()
-   }
+        //attaching the user that we found into the req
+        req.user = user
+        next()
+    }
+    catch(err){
+        res.status(401).send("ERROR : " + err.message)
+    }
 
 }
 

@@ -1,6 +1,8 @@
 // Importing the Express framework
 const express = require('express');
 const bcrypt = require('bcrypt')
+const cookieParser = require('cookie-parser')
+const jwt = require('jsonwebtoken')
 const {adminAuth,userAuth} = require('./middlewares/auth.js')
 const {connectDB} = require('./config/database');
 const User = require('./models/user.js');
@@ -10,6 +12,7 @@ const {validateSignupData, validateLoginData} = require('./utils/validation.js')
 const app = express();
 //middlware to parse the json data coming from the request body to the javascript object
 app.use(express.json())
+app.use(cookieParser())
 
 //API to login
 app.post("/login",async ( req,res)=>{
@@ -25,8 +28,20 @@ app.post("/login",async ( req,res)=>{
         throw new Error("Invalid Credentails")
       }
       //checking if the password is valid or not using bcrypt.compare
-      const isPasswordValid = await bcrypt.compare(password,user.password)
+      const isPasswordValid = await user.validatePassword(password)
       if(isPasswordValid){
+
+        // //create a JWT token
+        // const token = await jwt.sign({_id:user._id}, "Dev@Tinder&798",{expiresIn: "1d"})
+        // console.log(token)
+        // ? now that we have offloaded the above work to the userSchema methods, we can directly use .getJWT
+        const token = await user.getJWT()
+
+        //add the token to cookie and send the response back to the server 
+        res.cookie("token",token,{
+          expires: new Date(Date.now() + 8*3600000) // cookie will epxire in 8 hours 
+        })
+
         res.send("Login Successfull")
       }else{
         throw new Error("Password is not correct")
@@ -39,42 +54,27 @@ app.post("/login",async ( req,res)=>{
   }
 })
 
-//API to get single user by email 
-app.get("/user",async (req,res)=>{
-    const userEmail = req.body.email
-    console.log(userEmail)
+//Profile API to see the logged in User's Profile
+app.get("/profile",userAuth,async (req,res)=>{
 
-    
-    try {
-      const user = await User.find({email:userEmail})
-      res.send(user)
-      if(!user){
-        res.status(404).send("user not found")
-      }else{
+    try{
+        const user = req.user
         res.send(user)
-      }
-      
-    } catch (error) {
-      res.status(404).send("something went wrong while fetching data")
     }
+    catch(err){
+        res.status(400).send("ERROR : " + err.message)
+    }
+
+
+
+
 })
 
-//FEED API ->  GET /getAllUsers - get all user from the database
-app.get("/getAllUsers", async (req,res)=>{
-    
-  try{
-    const users = await User.find({})
-    if(users.length === 0){
-      res.status(404).send("no user found")
-    }else{
-      res.send(users)
-    }
-  }catch(err){
-    res.status(400).send("something went wrong while fetching data")
-  }
-
-
-
+//Dummy API to see the connection request sent by the logged in user
+app.post("/sendConnectionRequest", userAuth,async  (req,res)=>{
+  const user = req.user
+  //sending connection request to the user
+  res.send(user.firstName + " is sending connection request")
 })
 
 //SignUp API 
@@ -114,59 +114,6 @@ app.post("/signup",async (req,res)=>{
 
 })
 
-//deleting the user via API -> using findByIdAndDelete
-app.delete("/user",async (req,res)=>{
-  const userId = req.body.userId
-  // console.log(userId)
-  try{
-    const user = await User.findByIdAndDelete(userId)
-    res.send("user deleted successfully")
-  }
-  catch(err){
-    res.status(400).send("Failed to delete user")
-  }
-})
-
-//API to update user data -> using findByIdAndUpdate
-app.patch("/user/:userId", async (req,res)=>{
-  // const userId = req.body.userId
-  const userId = req.params?.userId
-  const data = req.body
-
-  try{
-
-    //Validation at API level , for which fields can be updated
-    // 
-    const ALLOWED_UPDATES = ["photoUrl", "gender", "age", "skills"];
-    const isUpdateAllowed = Object.keys(data).every((k) => ALLOWED_UPDATES.includes(k));
-  
-    if(!isUpdateAllowed){
-      throw new Error("Invalid update fields | update only allowed fields are: "+ ALLOWED_UPDATES)
-      throw new Error("Invalid update fields | update only allowed fields are: "+ ALLOWED_UPDATES)
-    }
-// Never trust user data , keep validation everywhere either at API or at DB level
-    if (data?.skills?.length>10){
-      throw new Error("skills array can have max 10 elements")
-    }
-    
-
-    const user = await User.findByIdAndUpdate(userId, data, 
-      {
-         new: true, 
-         runValidators:true,
-      });  // 'new: false' means return old document
-    if(!user){
-      res.status(400).send("user not found")
-    }
-    else{
-      res.send("user -> "+ user.firstName +" updated successfully"+"\n before user details: "+user)
-    }
-    
-  }
-  catch(err){
-    res.status(400).send("Failed to update user | " + err.message)
-  }
-})
 
 //connecting to the database first then initializing the server
 connectDB()
