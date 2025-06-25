@@ -1,0 +1,48 @@
+const mongoose = require('mongoose')
+
+const connectionRequestSchema = new mongoose.Schema(
+    {
+        fromUserId:{
+            type:mongoose.Schema.Types.ObjectId,
+            required:true,
+        },
+        toUserId:{
+            type:mongoose.Schema.Types.ObjectId,
+            required:true,
+        },
+        status:{
+            type:String,
+            required:true,
+            // we create enum where we want the user to strict to some values
+            enum:{
+                values:["ignored","interested","accepted","rejected"],
+                message:`{VALUE} is incorrect status type`
+            } 
+        },
+
+
+    },
+    {
+    timestamps:true
+    }
+)
+
+//in models , never use arrow functions ,user normal funcitons only
+// the below function is kind of  like a middlware which will be called pre/before saving 
+// simply , before saving the below function will be called
+// next() is used coz its like a middlware
+connectionRequestSchema.pre("save",function(next){
+    const connectionRequest = this
+    //CHECK if the frromUserId is same as toUserId
+    if(connectionRequest.fromUserId.equals(connectionRequest.toUserId)){
+        throw new Error("cannot send connection request to yourself")
+    }
+    next()
+})
+
+const ConnectionRequestModel = new mongoose.model(
+    "ConnectionRequest",
+    connectionRequestSchema
+)
+
+module.exports = ConnectionRequestModel

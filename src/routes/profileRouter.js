@@ -1,6 +1,7 @@
 const express = require('express')
 const {adminAuth,userAuth} = require('../middlewares/auth.js')
 const {validateEditProfileData} = require("../utils/validation.js")
+const bcrypt = require('bcrypt')
 
 const profileRouter = express.Router()
 
@@ -53,5 +54,30 @@ profileRouter.patch("/profile/edit",userAuth,async (req,res)=>{
     }
 
 })
+
+
+/
+// ? if user is already logged in then you do not need to check for the existing paasword , then simply ask new password and update it 
+profileRouter.patch("/profile/password",userAuth, async (req,res)=>{
+
+    try{
+        const newPassword = req.body?.password
+      
+        loggedInUser = req.user
+     
+        newPasswordHash = await bcrypt.hash(newPassword,10)
+ 
+        loggedInUser.password = newPasswordHash
+
+        loggedInUser.save()
+
+        res.send("Password update Successfully")
+
+    }
+    catch(err){
+        res.status(400).send("ERROR : "+err.message)
+    }
+})
+
 
 module.exports = profileRouter

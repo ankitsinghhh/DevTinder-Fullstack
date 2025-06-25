@@ -368,7 +368,6 @@ authRouter.post("/logout", async (req, res) => {
 * We’re not fetching any protected data.
 * We are simply clearing the token from the browser side.
 
-Here are your well-structured and easy-to-read **notes** for the `/profile/edit` API, covering both the route logic and the validation function:
 
 ---
 
@@ -413,6 +412,34 @@ Photo URL
 * Keeps the update operation safe and controlled.
 
 ---
+
+## Code Example : 
+```js
+//function to udpate the profile of the logged in user
+profileRouter.patch("/profile/edit",userAuth,async (req,res)=>{
+    try{
+        if(!validateEditProfileData(req)){
+            throw new Error("Invalid Edit request")
+        }
+        const loggedInUser = req.user
+        //you can do explicity for all of them like this but use loop 
+        // loggedInUser.firstName = req.body?.firstName;
+        Object.keys(req.body).forEach((key) => (loggedInUser[key] = req.body[key]))
+        await loggedInUser.save()
+        //apart from this below method , you can also use res.json()
+        // res.send(loggedInUser.firstName + " your profile updated successfully")
+        // giving resposne using res.json() -> much better way to send the response
+        res.json({
+            "message": `${loggedInUser.firstName} , your profile updated successfully`,
+            data : loggedInUser
+        })
+    }
+    catch(err){
+        res.status(400).send("ERROR : " + err.message)
+    }
+
+})
+```
 
 ## 🔄 Profile Update Logic
 
@@ -473,7 +500,116 @@ res.json({
 
 ---
 
-Let me know if you want to add schema-level field validation (like min length, type, etc.) or soft updates with rollback!
+#  📘 HOMEWORK : 
+---
+
+
+# 🔐 PATCH `/profile/password` — Update Password (Logged-in User)
+
+---
+
+## ✅ Purpose:
+Allows a **logged-in user** to update their password without needing to re-enter the old one (because identity is already verified via token).
+
+---
+
+## 🔐 Route Protection:
+- The route is protected by `userAuth` middleware.
+- Ensures only authenticated users can change their password.
+
+---
+
+
+
+## code example:
+```js
+profileRouter.patch("/profile/password",userAuth, async (req,res)=>{
+
+    try{
+        const newPassword = req.body?.password
+      
+        loggedInUser = req.user
+     
+        newPasswordHash = await bcrypt.hash(newPassword,10)
+ 
+        loggedInUser.password = newPasswordHash
+        
+        loggedInUser.save()
+
+        res.send("Password update Successfully")
+
+    }
+    catch(err){
+        res.status(400).send("ERROR : "+err.message)
+    }
+})
+```
+## 🔄 Request Flow:
+1. **New Password Input**  
+   Password is received from `req.body.password`.
+
+2. **Get Current User**  
+   The logged-in user is available via `req.user` (set by `userAuth` middleware).
+
+3. **Hash the New Password**  
+   Uses `bcrypt.hash()` to securely encrypt the new password before saving:
+   ```js
+   const newPasswordHash = await bcrypt.hash(newPassword, 10);
+    ```
+
+4. **Update the Password Field**
+   Sets the user's password to the new hashed value:
+
+   ```js
+   loggedInUser.password = newPasswordHash;
+   ```
+
+5. **Save the Updated User**
+   Commits the change to the database:
+
+   ```js
+   await loggedInUser.save();
+   ```
+
+6. **Respond with Success**
+   Returns a success message:
+
+   ```js
+   res.send("Password updated successfully");
+   ```
+
+---
+
+## ⚠️ Error Handling:
+
+If anything goes wrong (e.g., no password provided, DB error), it returns:
+
+```js
+res.status(400).send("ERROR : " + err.message);
+```
+
+---
+
+## 🧠 Key Learnings:
+
+| Step                     | Why It's Important                                                      |
+| ------------------------ | ----------------------------------------------------------------------- |
+| Protected by `userAuth`  | Ensures only logged-in users can access this route                      |
+| No old password required | Safe because the user is already verified via token                     |
+| Bcrypt hashing           | Passwords must always be stored securely in hashed form                 |
+| `await user.save()`      | Saves updated password into DB with validation support                  |
+| Clean code structure     | Follows best practice of extracting, processing, saving, and responding |
+
+---
+
+## 🚀 Enhancement Ideas:
+
+* Add `validator.isStrongPassword(newPassword)` before saving to enforce strong password rules.
+* Optionally, send a confirmation response with masked user info.
+
+---
+
+Let me know if you also want to implement the version where the user provides the **current password for confirmation** before updating!
 
 ```
 ```
