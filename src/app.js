@@ -1,12 +1,8 @@
 // Importing the Express framework
 const express = require('express');
-const bcrypt = require('bcrypt')
 const cookieParser = require('cookie-parser')
-const jwt = require('jsonwebtoken')
-const {adminAuth,userAuth} = require('./middlewares/auth.js')
 const {connectDB} = require('./config/database');
-const User = require('./models/user.js');
-const {validateSignupData, validateLoginData} = require('./utils/validation.js')
+
 
 // Creating an instance/object of an Express application
 const app = express();
@@ -14,106 +10,16 @@ const app = express();
 app.use(express.json())
 app.use(cookieParser())
 
-//API to login
-app.post("/login",async ( req,res)=>{
-  try{
-      //extracting the email and password from the request body
-      const { email, password} = req.body
-      //Validating if Email entered is valid or not 
-      validateLoginData(req)
-      //check if user is present in db or not 
-      const user = await User.findOne({email:email})
-      //now interpreting the response , if user not present , then throw error
-      if(!user){
-        throw new Error("Invalid Credentails")
-      }
-      //checking if the password is valid or not using bcrypt.compare
-      const isPasswordValid = await user.validatePassword(password)
-      if(isPasswordValid){
+const authRouter = require("./routes/authRouter")
+const profileRouter = require("./routes/profileRouter")
+const requestRouter = require("./routes/requestRouter")
 
-        // //create a JWT token
-        // const token = await jwt.sign({_id:user._id}, "Dev@Tinder&798",{expiresIn: "1d"})
-        // console.log(token)
-        // ? now that we have offloaded the above work to the userSchema methods, we can directly use .getJWT
-        const token = await user.getJWT()
+app.use("/",authRouter)
+app.use("/",profileRouter)
+app.use("/",requestRouter)
 
-        //add the token to cookie and send the response back to the server 
-        res.cookie("token",token,{
-          expires: new Date(Date.now() + 8*3600000) // cookie will epxire in 8 hours 
-        })
-
-        res.send("Login Successfull")
-      }else{
-        throw new Error("Password is not correct")
-      }
-
-
-  }
-  catch(err){
-    res.status(400).send("ERROR : " + err.message)
-  }
-})
-
-//Profile API to see the logged in User's Profile
-app.get("/profile",userAuth,async (req,res)=>{
-
-    try{
-        const user = req.user
-        res.send(user)
-    }
-    catch(err){
-        res.status(400).send("ERROR : " + err.message)
-    }
-
-
-
-
-})
-
-//Dummy API to see the connection request sent by the logged in user
-app.post("/sendConnectionRequest", userAuth,async  (req,res)=>{
-  const user = req.user
-  //sending connection request to the user
-  res.send(user.firstName + " is sending connection request")
-})
-
-//SignUp API 
-app.post("/signup",async (req,res)=>{
-
-  try{
-     // while someone signs up , first validation of data should be there 
-    validateSignupData(req)
-
-  //Then Encrypting the Password
-  // ! install bcrypt using npm i bcrypt
-
-  const {firstName, lastName, email,password} = req.body
-  const passwordHash = await bcrypt.hash(password,10)
-  console.log(passwordHash + " -> this is the hashed password ")
-
-  //first task is to pass dynamic data to the API using postman
-  // this is not a good way to create userObj
-    // const userObj = req.body
-    // const user = new User(userObj)
-    //instead do this -> you should mention all the fields explicitly
-    const user = new User({
-      firstName, 
-      lastName,
-      email,
-      password:passwordHash,
-    })
-
-    await user.save()
-
-    res.send("user created successfully")
-  }
-  catch(err){
-    res.status(400).send("ERROR : "+err.message)
-  }
-
-
-})
-
+// now the above code means that , when the request will come lets say /login , then it will check in first authRouter and it will match there 
+// but when the request will come as /profile , then also it will first check inside the authRouter and it will not find , then move on to the next one , then in profileRouter where the request /profile will be matched and response will be sent 
 
 //connecting to the database first then initializing the server
 connectDB()
