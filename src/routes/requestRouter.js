@@ -2,12 +2,13 @@ const express = require('express')
 const {adminAuth,userAuth} = require('../middlewares/auth.js')
 const ConnectionRequest = require("../models/connectionRequest.js")
 const User = require('../models/user.js')
+const { connect } = require('mongoose')
 
 const requestRouter = express.Router()
 
-// API to send connection request to the intended user with a status - ignored or interested
+// API to send connection request to the intended user with a status - ignored or interested - > /request/send/:status/:toUserId
 requestRouter.post(
-  "/request/send/:status/:toUserId", 
+"/request/send/:status/:toUserId", 
   userAuth,
   async  (req,res)=>{
   
@@ -69,6 +70,52 @@ requestRouter.post(
       res.status(400).send("ERROR : "+ err.message)
     }
 
+})
+
+//API to accept or reject a connection request - > /request/review/:status/:requestId
+requestRouter.post(
+  "/request/review/:status/:requestId",
+  userAuth,
+  async (req,res)=>{
+    try{
+      const loggedInUser = req.user
+      // const status = req.params.status
+      // const requestId = req.params.requestId
+      //instead of using above, we can direct extract usign destructuring
+      const {status,requestId} = req.params
+      //validate the status 
+      const allowedStatus = ["accepted","rejected"]
+      if(!allowedStatus.includes(status)){
+         return res
+         .status(400)
+         .json({message: "status is not allowed"})
+      }
+
+      //now we will check if requestId is present in db or not 
+      const connectionRequest = await ConnectionRequest.findOne({
+        _id:requestId,
+        toUserId:loggedInUser._id,
+        status:"interested"
+      })
+      console.log(connectionRequest)
+      if(!connectionRequest){
+        return res
+        .status(404)
+        .json({message: "Connection Request not found"})
+      }
+
+      connectionRequest.status = status
+
+      const data = await connectionRequest.save()
+
+      res.json({
+        message:"Connection Request "+status,
+        data,
+      })
+    }
+    catch(err){
+      res.status(400).send("ERROR : "+ err.message)
+    }
 })
 
 

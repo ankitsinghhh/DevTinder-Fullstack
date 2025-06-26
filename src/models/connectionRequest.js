@@ -4,10 +4,12 @@ const connectionRequestSchema = new mongoose.Schema(
     {
         fromUserId:{
             type:mongoose.Schema.Types.ObjectId,
+            ref:"User", // it creates a link b/w the two tables user and connection requests -> basically a reference to the user collection/table
             required:true,
         },
         toUserId:{
             type:mongoose.Schema.Types.ObjectId,
+            ref:"User",
             required:true,
         },
         status:{

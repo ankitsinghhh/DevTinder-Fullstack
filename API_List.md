@@ -30,18 +30,53 @@ To build the core functionality of the **DevTinder Project**, we need to impleme
 
 ---
 
+
+
+
 ### 🤝 Connection Request APIs
 
-| Method | Endpoint                                | Purpose                                             |
-|--------|------------------------------------------|-----------------------------------------------------|
-| POST   | `/request/send/:status/:toUserId`        | Send a request based on `status` (interested/ignore) |
-| POST   | `/request/review/accepted/:requestId`    | Accept a received request                           |
-| POST   | `/request/review/rejected/:requestId`    | Reject a received request                           |
+| Method | Endpoint                                | Purpose                                                                 |
+|--------|------------------------------------------|-------------------------------------------------------------------------|
+| POST   | `/request/send/:status/:toUserId`        | Send a request with status `"interested"` or `"ignore"`                |
+| POST   | `/request/review/:status/:requestId`     | Review a received request by updating its status to `"accepted"` or `"rejected"` |
 
-> ✅ Instead of separate `/interested/:userId` and `/ignore/:userId` endpoints,  
-we now use a **single unified route**:  
-`/request/send/:status/:toUserId`  
-Where `:status` can be `"interested"` or `"ignore"`.
+---
+
+> ✅ Instead of having separate endpoints like:  
+- `/request/send/interested/:userId`  
+- `/request/send/ignore/:userId`  
+- `/request/review/accepted/:requestId`  
+- `/request/review/rejected/:requestId`  
+
+✅ We now use two **unified, cleaner routes**:  
+
+#### ✅ Sending Request:
+```bash
+/request/send/:status/:toUserId
+```
+
+Where `:status` can be:
+
+* `"interested"` ✅ Right Swipe
+* `"ignore"` ❌ Left Swipe
+
+#### ✅ Reviewing Request:
+
+```bash
+/request/review/:status/:requestId
+```
+
+Where `:status` can be:
+
+* `"accepted"` ✅ Connection Made
+* `"rejected"` ❌ Connection Denied
+
+---
+
+This approach reduces code duplication and ensures consistent request handling logic.
+
+```
+```
 
 ---
 

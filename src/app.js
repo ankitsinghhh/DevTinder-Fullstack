@@ -13,10 +13,12 @@ app.use(cookieParser())
 const authRouter = require("./routes/authRouter")
 const profileRouter = require("./routes/profileRouter")
 const requestRouter = require("./routes/requestRouter")
+const userRouter = require("./routes/userRouter")
 
 app.use("/",authRouter)
 app.use("/",profileRouter)
 app.use("/",requestRouter)
+app.use("/",userRouter)
 
 // now the above code means that , when the request will come lets say /login , then it will check in first authRouter and it will match there 
 // but when the request will come as /profile , then also it will first check inside the authRouter and it will not find , then move on to the next one , then in profileRouter where the request /profile will be matched and response will be sent 
