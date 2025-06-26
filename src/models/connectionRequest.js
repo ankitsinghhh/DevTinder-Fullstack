@@ -27,6 +27,10 @@ const connectionRequestSchema = new mongoose.Schema(
     }
 )
 
+connectionRequestSchema.index({fromUserId:1, toUserId:1}) // here 1 means ascending order, -1 means descending order
+// why compound index -> 
+
+
 //in models , never use arrow functions ,user normal funcitons only
 // the below function is kind of  like a middlware which will be called pre/before saving 
 // simply , before saving the below function will be called

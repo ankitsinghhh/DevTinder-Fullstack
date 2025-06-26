@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema(
             required: true ,
             trim:true
         },
+        //if email is not index . then /login api will become very slow as db has go one by one through each meail  { if unique:true is applied , then automatically index is created  } otherwise to apply indexing , you can just use index:true
         email: { 
             type: String, 
             required: true, 
@@ -77,6 +78,10 @@ const userSchema = new mongoose.Schema(
     },
     {timestamps:true}
 );
+
+//compound index to search a user by firstName and lastName
+userSchema.index({firstName:1,lastName:1})
+userSchema.index({gender:1})
 
 //why we are not using arrow function is becuase inside an arrow function, {this} will not work
 userSchema.methods.getJWT = async function(){
