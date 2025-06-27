@@ -106,7 +106,7 @@ userRouter.get(
             
         
 
-            res.send(users )
+            res.json({data: users} )
         }
         catch(error){
             res.status(400).json({message: error.message})
