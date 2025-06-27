@@ -1,6 +1,5 @@
 # 📘 Lecture 14 Notes – /user/feed api and Pagination 
 
-Here's a clean and detailed 📘 **Notes-style explanation** of the `/feed` API, including the logic and reasoning:
 
 ---
 
