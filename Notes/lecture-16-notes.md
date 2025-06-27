@@ -1,7 +1,7 @@
 
 # 📘 Lecture 16 Notes – DevTinder Frontend
 
-### `/signup`, `/login`, `/logout` pages + API integration
+###  `/login` page + API integration , Cors issue , Redux Toolkit
 
 ---
 
