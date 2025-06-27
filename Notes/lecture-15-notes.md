@@ -100,3 +100,74 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 
 ---
 
+
+In **latest versions**, you **should** enable DaisyUI using:
+
+```css
+@plugin "daisyui";
+```
+
+in your `index.css` (or `tailwind.css`).
+
+---
+
+### ✅ Clean Explanation:
+
+🛠 **For Tailwind CSS v4.1+ + DaisyUI v5+:**
+
+1️⃣ **Install DaisyUI:**
+
+```bash
+npm install -D daisyui@latest
+```
+
+2️⃣ **In your `index.css`:**
+
+```css
+@import "tailwindcss";
+@plugin "daisyui";
+```
+
+✅ This **automatically activates DaisyUI** without modifying `tailwind.config.js`.
+
+---
+
+### Why did this change?
+
+* DaisyUI v5+ uses the **new Tailwind plugin pipeline** to simplify activation.
+* It reduces clutter in `tailwind.config.js`, allowing **plugin activation directly in CSS**.
+
+---
+
+### To confirm DaisyUI is working:
+
+Add in `App.jsx`:
+
+```jsx
+function App() {
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <button className="btn btn-primary">DaisyUI Button</button>
+    </div>
+  );
+}
+```
+
+Run:
+
+```bash
+npm run dev
+```
+
+✅ You should see a **styled button**, confirming DaisyUI is active.
+
+---
+
+## 🚀 Summary:
+
+✅ For **Tailwind v4.1+ + DaisyUI v5+**:
+✅ Install with `npm i -D daisyui`.
+✅ Add `@plugin "daisyui";` in your `index.css`.
+✅ Use DaisyUI components directly.
+
+---
