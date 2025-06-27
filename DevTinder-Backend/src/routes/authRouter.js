@@ -74,7 +74,7 @@ authRouter.post("/login",async ( req,res)=>{
             expires: new Date(Date.now() + 8*3600000) // cookie will epxire in 8 hours 
           })
   
-          res.send("Login Successfull")
+          res.json({message:"Login Successfull",data:user})
         }else{
           throw new Error("Password is not correct")
         }
