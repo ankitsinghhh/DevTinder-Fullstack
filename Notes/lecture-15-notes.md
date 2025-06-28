@@ -20,7 +20,7 @@ npm create vite@latest devtinder-ui -- --template react
 ### 2️⃣ Install dependencies:
 
 ```bash
-cd devtinder-ui
+cd DevTinder-Frontend
 npm install
 ```
 
@@ -422,9 +422,6 @@ For example:
 
 ---
 
-If you want, I can next prepare:
-✅ A **diagram** illustrating nested route flow with `Outlet`.
-✅ Or proceed with **page component structure setup** for your DevTinder.
 
 
 ## 🪐 `Body.jsx` structure with `<Outlet />`

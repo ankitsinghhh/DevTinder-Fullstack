@@ -115,17 +115,15 @@ In this lecture, we learned the basics Routing and Request Handlers using middle
 #### **Core Methods**
 1. **GET**
    - Retrieves data from server
-   - Safe and idempotent
+   - Safe 
    - Example: Fetching user profile
 
 2. **POST**
    - Creates new resources
-   - Not idempotent
    - Example: User registration
 
 3. **PUT**
    - Full resource replacement
-   - Idempotent
    - Example: Complete profile update
 
 4. **PATCH**
@@ -134,7 +132,6 @@ In this lecture, we learned the basics Routing and Request Handlers using middle
 
 5. **DELETE**
    - Removes resources
-   - Idempotent
    - Example: Deleting a post
 
 6. **HEAD**

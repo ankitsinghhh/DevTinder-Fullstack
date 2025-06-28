@@ -308,7 +308,7 @@ app.patch("/user", async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(userId, updateData, {
       new: true,
-      runValidators: true
+      runValidators: true //coz while updating validators are not applied by default , hence needs to be set to true 
     });
 
     if (!user) {

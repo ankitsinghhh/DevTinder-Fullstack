@@ -44,7 +44,52 @@ authRouter.post("/signup",async (req,res)=>{
   
   
   })
-  
+
+// the below one accepts every field -> to signup new users fully -> personal purpose
+// authRouter.post('/signup', async (req, res) => {
+//   try {
+//       // 1️⃣ Validate input
+//       validateSignupData(req);
+
+//       // 2️⃣ Extract fields explicitly
+//       const {
+//           firstName,
+//           lastName,
+//           email,
+//           password,
+//           photoUrl,
+//           about,
+//           skills,
+//           age,
+//           gender
+//       } = req.body;
+
+//       // 3️⃣ Hash the password
+//       const passwordHash = await bcrypt.hash(password, 10);
+//       console.log(passwordHash + " -> hashed password");
+
+//       // 4️⃣ Create the user explicitly with all fields
+//       const user = new User({
+//           firstName,
+//           lastName,
+//           email,
+//           password: passwordHash,
+//           photoUrl,
+//           about,
+//           skills,
+//           age,
+//           gender
+//       });
+
+//       // 5️⃣ Save to DB
+//       await user.save();
+
+//       res.send("User created successfully");
+//   } catch (err) {
+//       console.error(err);
+//       res.status(400).send("ERROR: " + err.message);
+//   }
+// });
 
 //API to login
 authRouter.post("/login",async ( req,res)=>{

@@ -123,7 +123,7 @@ Here are your new learnings written in **notes format in Markdown (`.md`)**:
 - **Install bcrypt**:
   ```bash
   npm i bcrypt
-
+  ```
 
 * **Why?**
   Storing raw passwords is insecure. Hashing protects user credentials.
@@ -185,7 +185,7 @@ Here are your new learnings written in **notes format in Markdown (`.md`)**:
 
 ```js
 const { email, password } = req.body;
-````
+```
 
 * This extracts `email` and `password` from the incoming request.
 * These fields are typically sent from Postman or frontend via a POST request body.
