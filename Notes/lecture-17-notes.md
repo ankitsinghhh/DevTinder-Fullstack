@@ -1,7 +1,7 @@
 
 # 📘 Lecture 17 Notes – DevTinder Frontend
 
-###  `/login` page + API integration , Cors issue , Redux Toolkit
+###  `/logout` & `/profile/edit` & `/feed` page + API integration
 
 
 
@@ -128,7 +128,7 @@ Here are **clean, structured notes** for your **Logout feature, login error hand
 
 ---
 
-## 📘 Lecture – Logout Functionality & Login Error Handling
+## 📘 Logout Functionality & Login Error Handling
 
 ---
 
