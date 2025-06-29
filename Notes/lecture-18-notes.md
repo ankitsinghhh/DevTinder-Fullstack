@@ -1,4 +1,4 @@
-# 📘 Lecture 17 Notes – DevTinder Frontend
+# 📘 Lecture 18 Notes – DevTinder Frontend
 
 ###  `/user/connections` & `request/review/accepted/<requestID>`  page + API integration
 

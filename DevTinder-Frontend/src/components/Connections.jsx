@@ -31,9 +31,9 @@ const Connections = () => {
 
     if(!connections) return
 
-    if(connections.length === 0) return <h1 className='text-3xl font-bold select-none text-center my-10'>No connections found</h1>
+    if(connections.length === 0) return <h1 className='text-3xl font-bold select-none text-center my-30'>No connections found</h1>
   return (
-    <div className='text-center my-10'>
+    <div className='text-center my-30'>
       <h1 className='text-3xl font-bold'>Connections</h1>
 
     <div className='flex flex-wrap  my-14 gap-10 justify-center items-center'>

@@ -41,11 +41,11 @@ const Requests = () => {
 
   if (!requests) return null
   if (requests.length === 0) {
-    return <h1 className='text-3xl font-bold select-none text-center my-10'>No Requests found</h1>
+    return <h1 className='text-3xl font-bold select-none text-center my-30'>No Requests found</h1>
   }
 
   return (
-    <div className='text-center my-10'>
+    <div className='text-center my-30'>
       <h1 className='text-3xl font-bold'>Connection Requests</h1>
       <div className='flex flex-wrap my-14 gap-10 justify-center items-center'>
         {requests.map(request => {
