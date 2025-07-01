@@ -63,11 +63,11 @@ requestRouter.post(
 
       const data = await connectionRequest.save()
 
-      const emailRes = await sendEmail.run(
-        "A new Connection Request from "+req.user.firstName,
-        req.user.firstName + "'s status for " + toUserIdExists.firstName + " is now "+status
-      )
-      console.log(emailRes)
+      // const emailRes = await sendEmail.run(
+      //   "A new Connection Request from "+req.user.firstName,
+      //   req.user.firstName + "'s status for " + toUserIdExists.firstName + " is now "+status
+      // )
+      // console.log(emailRes)
 
      res.json({
       message : req.user.firstName + "'s status for " + toUserIdExists.firstName + " is now "+status,
