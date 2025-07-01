@@ -1,8 +1,10 @@
 // Importing the Express framework
 const express = require('express');
+require('dotenv').config();
 const cookieParser = require('cookie-parser')
 const {connectDB} = require('./config/database');
 const cors = require('cors');
+// require('dotenv').config();
 
 
 // Creating an instance/object of an Express application
@@ -36,7 +38,7 @@ connectDB()
 .then(()=>{
   console.log("database connection established successfully") 
   //after establishing database connection, we can start the server using app.listen
-  app.listen(7777, () => {
+  app.listen(process.env.PORT, () => {
     console.log("✅ Server is running on port 7777 🚀");
   });
 }

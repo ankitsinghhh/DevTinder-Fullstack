@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
+// require('dotenv').config();
 
 const adminAuth =  (req,res,next)=>{
     console.log("Admin Auth is getting checked")
@@ -27,7 +28,7 @@ const userAuth = async (req,res,next)=>{
             return res.status(401).send("Please Login")
         }
         //validate the token
-        const decodedObj = await jwt.verify(token,"Dev@Tinder&798")
+        const decodedObj = await jwt.verify(token,process.env.JWT_SECRET)
         //get id from decodedObj
         const _id = decodedObj._id
         //find the user
