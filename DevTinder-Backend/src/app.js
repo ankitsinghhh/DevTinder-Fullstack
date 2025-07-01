@@ -4,7 +4,8 @@ require('dotenv').config();
 const cookieParser = require('cookie-parser')
 const {connectDB} = require('./config/database');
 const cors = require('cors');
-// require('dotenv').config();
+
+require("./utils/cronjob.js")
 
 
 // Creating an instance/object of an Express application
