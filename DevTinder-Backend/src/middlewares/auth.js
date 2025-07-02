@@ -2,21 +2,40 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 // require('dotenv').config();
 
-const adminAuth =  (req,res,next)=>{
-    console.log("Admin Auth is getting checked")
-    //Logic of checking if request is authorised
-   const token = "xyz"
-   const isAdminAuthorized = token === "xyz"
+// const adminAuth =  (req,res,next)=>{
+//     console.log("Admin Auth is getting checked")
+//     //Logic of checking if request is authorised
+//    const token = "xyz"
+//    const isAdminAuthorized = token === "xyz"
 
-   if(!isAdminAuthorized){
-       res.status(401).send("Unauthorized Admin Access ")
-   }
-   else{
-       console.log("Admin Authorized")
-       next()
-   }
+//    if(!isAdminAuthorized){
+//        res.status(401).send("Unauthorized Admin Access ")
+//    }
+//    else{
+//        console.log("Admin Authorized")
+//        next()
+//    }
 
-}
+// }
+
+const adminAuth = (req, res, next) => {
+    const { adminPass } = req.params;
+  
+    if (!adminPass) {
+      return res.status(401).json({ success: false, message: 'Admin password required in URL' });
+    }
+    // console.log(adminPass)
+    // console.log(process.env.ADMIN_SECRET)
+  
+    if (adminPass !== process.env.ADMIN_SECRET) {
+      return res.status(403).json({ success: false, message: 'Invalid admin password' });
+    }
+  
+    next();
+  };
+  
+  
+  
 
 const userAuth = async (req,res,next)=>{
 

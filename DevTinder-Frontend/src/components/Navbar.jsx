@@ -65,14 +65,20 @@ const Navbar = () => {
                 <li>
                   <Link to="/profile" className="justify-between">
                     Profile
-                    <span className="badge">New</span>
+                    {/* <span className="badge">New</span> */}
                   </Link>
+                </li>
+                <li>
+                  <Link to="/">Feed</Link>
                 </li>
                 <li>
                   <Link to="/connections">Connections</Link>
                 </li>
                 <li>
                   <Link to="/requests">Requests</Link>
+                </li>
+                <li>
+                  <Link to="/premium">Premium</Link>
                 </li>
                 <li>
                   <a onClick={handleLogout}>Logout</a>
