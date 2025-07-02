@@ -77,18 +77,18 @@ razorpayRouter.post("/payment/webhook", async (req, res) => {
 
   const user = await User.findOne({ _id: payment.userId });
 
-  user.isPremium = true
-  user.membershipType = payment.notes.membershipType
-  await user.save()
+//   user.isPremium = true
+//   user.membershipType = payment.notes.membershipType
+//   await user.save()
 
-    // // Only mark user as premium if payment is successful
-    // if (paymentDetails.status === "captured") {
-    //     const user = await User.findOne({ _id: payment.userId });
+    // Only mark user as premium if payment is successful
+    if (paymentDetails.status === "captured") {
+        const user = await User.findOne({ _id: payment.userId });
     
-    //     user.isPremium = true;
-    //     user.membershipType = payment.notes.membershipType;
-    //     await user.save();
-    //   }
+        user.isPremium = true;
+        user.membershipType = payment.notes.membershipType;
+        await user.save();
+      }
 
 
 
