@@ -1,8 +1,29 @@
 import axios from "axios";
 // import React, { useState } from "react";
 import { BASE_URL } from "../utils/constants";
+import { useEffect, useState } from "react";
 
 const PremiumRazorpay = () => {
+
+    const [isPremium,setIsPremium] = useState(false)
+
+    const verifyPremiumUser =  async () =>{
+        try {
+            const res =  await axios.get(
+                BASE_URL+"/premium/verify",
+                {withCredentials:true}
+            );
+            if(res.data.isPremium){
+                setIsPremium(true)
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    useEffect(()=>{
+        verifyPremiumUser()
+    },[])
 
     const handleBuyClick = async (type) =>{
         try {
@@ -32,6 +53,7 @@ const PremiumRazorpay = () => {
                 theme: {
                   color: '#F37254'
                 },
+                handler: verifyPremiumUser,
               };
         
 
@@ -44,7 +66,12 @@ const PremiumRazorpay = () => {
         }
     }
 
-  return (
+  return isPremium ?
+  (<div className="flex justify-center my-30 mb-30">
+    You are already a Premium User
+  </div>)
+  :
+   (
     <div className="flex flex-col items-center justify-center min-h-screen  p-4">
       <h1 className="text-3xl font-bold mb-8 text-gray-200">
         Choose Your Premium Plan
@@ -111,7 +138,7 @@ const PremiumRazorpay = () => {
 
     
     </div>
-  );
+   )  ;
 };
 
 export default PremiumRazorpay;
