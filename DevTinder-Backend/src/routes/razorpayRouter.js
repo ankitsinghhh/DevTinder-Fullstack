@@ -68,7 +68,7 @@ razorpayRouter.post("/payment/webhook", async (req, res) => {
   const paymentDetails = req.body.payload.payment.entity;
 
   const payment = await Payment.findOne({
-        orderId: paymentDetails.order._id
+        orderId: paymentDetails.order.id
   })
   payment.status = paymentDetails.status;
   await payment.save();
