@@ -1,8 +1,8 @@
 # DevTinder 🌐
 
-[![Live Demo](https://img.shields.io/badge/Live%20Site-tinderdev.in-blue)](https://tinderdev.in)
+[![Live Demo](https://img.shields.io/badge/Live%20Site-tinderdev.life-blue)](https://tinderdev.life)
 
-Welcome to **DevTinder**, my full-stack web app project designed to connect developers in a vibrant, community-driven platform! Built with **Node.js**, **Express**, **MongoDB** for the backend and **React** for the frontend, DevTinder is live at [tinderdev.in](https://tinderdev.in), hosted on AWS. It’s like Tinder, but for coders — find your next collaborator, mentor, or tech buddy with a click!
+Welcome to **DevTinder**, my full-stack web app project designed to connect developers in a vibrant, community-driven platform! Built with **Node.js**, **Express**, **MongoDB** for the backend and **React** for the frontend, DevTinder is live at [tinderdev.life](https://tinderdev.life), hosted on AWS. It’s like Tinder, but for coders — find your next collaborator, mentor, or tech buddy with a click!
 
 ## About
 
@@ -104,7 +104,7 @@ JWT Auth     WebSockets       Data Storage
 
 ## Deployment
 
-DevTinder is live at [tinderdev.in](https://tinderdev.in), powered by AWS:
+DevTinder is live at [tinderdev.life](https://tinderdev.life), powered by AWS:
 - **Backend**: Hosted on an EC2 instance with Nginx.
 - **Frontend**: Served via EC2/Nginx.
 - **Domain**: Managed via Cloudflare, registered on GoDaddy.
@@ -118,6 +118,6 @@ DevTinder is live at [tinderdev.in](https://tinderdev.in), powered by AWS:
 I’d love to hear your thoughts or ideas for DevTinder! Reach me at:
 - **Email**: ankitsingh79834@gmail.com 
 - **GitHub**: [ankitsinghhh](https://github.com/ankitsinghhh)
-- **Website**: [tinderdev.in](https://tinderdev.in)
+- **Website**: [tinderdev.life](https://tinderdev.life)
 
 Thanks for checking out DevTinder! 
