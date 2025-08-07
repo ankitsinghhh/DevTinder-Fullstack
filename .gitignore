@@ -1,3 +1,5 @@
 node_modules
 pat.txt
 .env
+dist
+build

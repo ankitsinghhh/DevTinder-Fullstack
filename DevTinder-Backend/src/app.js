@@ -9,15 +9,17 @@ const http = require('http')
 require("./utils/cronjob.js")
 
 
+
 // Creating an instance/object of an Express application
 const app = express();
 //middlware to parse the json data coming from the request body to the javascript object
 app.use(
   cors({
-        origin: "http://localhost:5173", // this is the frontend url
+        origin: ["http://localhost:5173","https://devtinder-fullstack-backend.onrender.com"], // this is the frontend url
         credentials: true, // this is to allow the cookies to be sent to the frontend
       })
 )
+// https://devtinder-fullstack-backend.onrender.com
 app.use(express.json())
 app.use(cookieParser())
 
